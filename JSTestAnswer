@@ -53,7 +53,7 @@ const tasks = [
 
 
 
-### JS Answerd
+### JS Answer
 
 // 1
 function countEmployeesByFactory(factories) {
