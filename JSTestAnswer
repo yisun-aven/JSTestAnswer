@@ -49,3 +49,87 @@ const tasks = [
 4. Count total hours worked in 1 day ? // => 39
 5. Make a function that take as parameters dayTime and return number of employee working // howManyEmployeeByTime(time) => int
 6. How many days of work needed to done all tasks ? // => 1 day = 9:00 to 00:00 between 00:00 and 09:00 doesnt count.
+
+
+
+
+### JS Answerd
+
+// 1
+function countEmployeesByFactory(factories) {
+  return factories.map(factory => ({
+    name: factory.name,
+    count: factory.employees.length
+  }));
+}
+
+// 2
+function countFactoriesByEmployee(factories) {
+  const employees = factories.reduce((acc, factory) => {
+    factory.employees.forEach(employee => {
+      acc[employee] = acc[employee] ? acc[employee] + 1 : 1;
+    });
+    return acc;
+  }, {});
+  return Object.entries(employees).map(([employee, count]) => ({
+    employee,
+    count
+  }));
+}
+
+// 3 
+function orderEmployeesByAlphabeticalOrder(factories, name) {
+  const factory = factories.find(factory => factory.name === name);
+  if (factory) {
+    return {
+      name: factory.name,
+      employees: factory.employees.sort()
+    };
+  }
+  return null;
+}
+
+// 4
+function convertTimeToHours(time) {
+  const [hours] = time.split(":").map(Number);
+  return hours;
+}
+
+function countTotalHoursWorked(employeeType, employees) {
+  const totalHours = employees.reduce((total, employee) => {
+    const employeeTypeObj = employeeType.find(type => type.id === employee.type);
+    const beginHours = convertTimeToHours(employeeTypeObj.work_begin);
+    const endHours = convertTimeToHours(employeeTypeObj.work_end);
+    const duration = endHours >= beginHours ? endHours - beginHours : (24 - beginHours) + endHours;
+    return total + duration;
+  }, 0);
+  return totalHours;
+}
+
+// 5 
+function howManyEmployeeByTime(dayTime) {
+  const matchingEmployees = employees.filter(employee => {
+    const employeeTypeObj = employeeType.find(type => type.id === employee.type);
+    const beginTime = employeeTypeObj.work_begin;
+    var tempEnd = employeeTypeObj.work_end
+    if (employeeTypeObj.work_end === "00:00:00") {
+        tempEnd = "24:00:00"
+    }
+    const endTime = tempEnd
+    return dayTime >= beginTime && dayTime <= endTime;
+  });
+
+  return matchingEmployees.length;
+}
+
+// 6 
+function calculateWorkDays(employeeType, employees, tasks) {
+  const totalTaskDuration = tasks.reduce((total, task) => {
+    return total + task.duration;
+  }, 0);
+  
+  const workHoursPerDay = countTotalHoursWorked(employeeType, employees);
+  const workDays = Math.ceil(totalTaskDuration / (workHoursPerDay * 60));
+  return workDays;
+  
+}
